@@ -38,16 +38,41 @@ public:
     int height;
 };
 
-Node* root = NULL;
+Node* root;
+
+class AVL_Tree
+{
+public:
+    int height(Node*);
+    Node* newNode(info);
+    Node* rightRotate(Node*);
+    Node* leftRotate(Node*);
+    int getBalance(Node*);
+    Node* insert(Node*, info);
+    void preOrder(Node*);
+    void inOrder(Node*);
+    void postOrder(Node*);
+    Node* minValueNode(Node*);
+    Node* deleteNode(Node*, int);
+    Node* search(Node*, int);
+    void searchData(int);
+    void updateData(int);
+    void saveData(Node*);
+
+    AVL_Tree() {
+        root = NULL;
+    }
+};
 
 int max(int a, int b);
+void menu(dataRow data, info info);
 
 int max(int a, int b)
 {
     return (a > b) ? a : b;
 }
 // A utility function to get the height of the tree
-int height(Node* N)
+int AVL_Tree::height(Node* N)
 {
     if (N == NULL)
         return 0;
@@ -56,7 +81,7 @@ int height(Node* N)
 /* Helper function that allocates a
    new node with the given key and
    NULL left and right pointers. */
-Node* newNode(info info)
+Node* AVL_Tree::newNode(info info)
 {
     Node* node = new Node();
     node->info.index = info.index;
@@ -69,11 +94,10 @@ Node* newNode(info info)
                       // added at leaf
     return(node);
 }
-
 // A utility function to right
 // rotate subtree rooted with y
 // See the diagram given above.
-Node* rightRotate(Node* y)
+Node* AVL_Tree::rightRotate(Node* y)
 {
     Node* x = y->left;
     Node* T2 = x->right;
@@ -95,7 +119,7 @@ Node* rightRotate(Node* y)
 // A utility function to left
 // rotate subtree rooted with x
 // See the diagram given above.
-Node* leftRotate(Node* x)
+Node* AVL_Tree::leftRotate(Node* x)
 {
     Node* y = x->right;
     Node* T2 = y->left;
@@ -115,7 +139,7 @@ Node* leftRotate(Node* x)
 }
 
 // Get Balance factor of node N
-int getBalance(Node* N)
+int AVL_Tree::getBalance(Node* N)
 {
     if (N == NULL)
         return 0;
@@ -125,7 +149,7 @@ int getBalance(Node* N)
 // Recursive function to insert a key
 // in the subtree rooted with node and
 // returns the new root of the subtree.
-Node* insert(Node* node, info info)
+Node* AVL_Tree::insert(Node* node, info info)
 {
     /* 1. Perform the normal BST insertion */
     if (node == NULL)
@@ -180,7 +204,7 @@ Node* insert(Node* node, info info)
 // traversal of the tree.
 // The function also prints height
 // of every node
-void preOrder(Node* node = root)
+void AVL_Tree::preOrder(Node* node = root)
 {
     if (root == NULL) {
         cout << "Nothing to display" << endl;
@@ -195,7 +219,8 @@ void preOrder(Node* node = root)
         preOrder(node->right);
     }
 }
-void inOrder(Node* node = root) {
+void AVL_Tree::inOrder(Node* node = root)
+{
     if (root == NULL) {
         cout << "Nothing to display" << endl;
     }
@@ -209,7 +234,8 @@ void inOrder(Node* node = root) {
         inOrder(node->right);
     }
 }
-void postOrder(Node*node = root) {
+void AVL_Tree::postOrder(Node* node = root)
+{
     if (root == NULL) {
         cout << "Nothing to display" << endl;
     }
@@ -227,7 +253,7 @@ void postOrder(Node*node = root) {
 return the node with minimum key value
 found in that tree. Note that the entire
 tree does not need to be searched. */
-Node* minValueNode(Node* node)
+Node* AVL_Tree::minValueNode(Node* node)
 {
     Node* current = node;
 
@@ -242,7 +268,7 @@ Node* minValueNode(Node* node)
 // with given key from subtree with
 // given root. It returns root of the
 // modified subtree.
-Node* deleteNode(Node* root, int key)
+Node* AVL_Tree::deleteNode(Node* root, int key)
 {
 
     // STEP 1: PERFORM STANDARD BST DELETE
@@ -345,7 +371,7 @@ Node* deleteNode(Node* root, int key)
 
     return root;
 }
-Node* search(Node* node, int key)
+Node* AVL_Tree::search(Node* node, int key)
 {
     if (node == NULL)
     {
@@ -368,7 +394,8 @@ Node* search(Node* node, int key)
         return node;
     }
 }
-void searchData(int key) {
+void AVL_Tree::searchData(int key)
+{
     Node* result = search(root, key);
     if (result == NULL)
         cout << "Data is not found" << endl;
@@ -380,7 +407,8 @@ void searchData(int key) {
         }
     }
 }
-void updateData(int key) {
+void AVL_Tree::updateData(int key)
+{
     Node* result = search(root, key);
     if (result == NULL)
         cout << "Data is not found" << endl;
@@ -397,7 +425,7 @@ void updateData(int key) {
         }
     }
 }
-void saveData(Node* node = root)
+void AVL_Tree::saveData(Node* node = root)
 {
     if (root == NULL) {
         cout << "Nothing to save" << endl;
@@ -407,7 +435,7 @@ void saveData(Node* node = root)
 
         //viet save vs fstream
         fstream f;
-        f.open("data.txt", ios::app);
+        f.open("sinhvien.txt", ios::app);
         f << endl << node->info.index << "|";
         for (int i = 0; i < num_fields - 1; i++) {
             f << node->info.data.fields[i] << "|";
@@ -419,9 +447,10 @@ void saveData(Node* node = root)
     }
 }
 
-void menu(dataRow data, info info)
+void menu(dataRow data, info info, AVL_Tree tree)
 {
     int choice, key;
+    clock_t begin, end;
     cout << "\n\t1. Insert\n\t2. Delete\n\t3. Preorder Traversal\n\t4. Inorder Traversal\n\t5. Postorder Traversal\n\t6. Search\n\t7. Update\n\t8. Save Data\n\t9. Exit" << endl;
     while (1) {
         cout << "Enter your choice: ";
@@ -434,39 +463,54 @@ void menu(dataRow data, info info)
                 cin.ignore();
                 cin >> info.data.fields[i];
             }
-            root = insert(root, info);
+            begin = clock(); //do time thuc thi chuong trình
+            root = tree.insert(root, info);
+            end = clock();
+            cout << "Time run: " << (float)(end - begin) / CLOCKS_PER_SEC << "s" << endl;
             break;
         case 2:
             cout << "Enter element to delete: ";
             cin >> key;
-            root = deleteNode(root, key);
+            begin = clock(); //do time thuc thi chuong trình
+            root = tree.deleteNode(root, key);
+            end = clock();
+            cout << "Time run: " << (float)(end - begin) / CLOCKS_PER_SEC << "s" << endl;
             break;
         case 3:
+            begin = clock(); //do time thuc thi chuong trình
             cout << endl;
             cout << "index" << "\t\t";
             for (int i = 0; i < num_fields; i++) {
                 cout << data.fields[i] << "\t\t";
             }
             cout << endl;
-            preOrder(root);
+            tree.preOrder(root);
+            end = clock();
+            cout << "Time run: " << (float)(end - begin) / CLOCKS_PER_SEC << "s" << endl;
             break;
         case 4:
+            begin = clock(); //do time thuc thi chuong trình
             cout << endl;
             cout << "index" << "\t\t";
             for (int i = 0; i < num_fields; i++) {
                 cout << data.fields[i] << "\t\t";
             }
             cout << endl;
-            inOrder(root);
+            tree.inOrder(root);
+            end = clock();
+            cout << "Time run: " << (float)(end - begin) / CLOCKS_PER_SEC << "s" << endl;
             break;
         case 5:
+            begin = clock(); //do time thuc thi chuong trình
             cout << endl;
             cout << "index" << "\t\t";
             for (int i = 0; i < num_fields; i++) {
                 cout << data.fields[i] << "\t\t";
             }
             cout << endl;
-            postOrder(root);
+            tree.postOrder(root);
+            end = clock();
+            cout << "Time run: " << (float)(end - begin) / CLOCKS_PER_SEC << "s" << endl;
             break;
         case 6:
             cout << "Enter element to search: ";
@@ -476,18 +520,25 @@ void menu(dataRow data, info info)
                 cout << data.fields[i] << "\t\t";
             }
             cout << endl;
-            searchData(key);
+            begin = clock(); //do time thuc thi chuong trình
+            tree.searchData(key);
             cout << endl;
+            end = clock();
+            cout << "Time run: " << (float)(end - begin) / CLOCKS_PER_SEC << "s" << endl;
             break;
         case 7:
             cout << "Enter element to update: ";
             cin >> key;
-            updateData(key);
+            begin = clock(); //do time thuc thi chuong trình
+            tree.updateData(key);
+            end = clock();
+            cout << "Time run: " << (float)(end - begin) / CLOCKS_PER_SEC << "s" << endl;
             break;
         case 8:
         {
             fstream f;
-            f.open("data.txt", ios::out);
+            f.open("sinhvien.txt", ios::out);
+            begin = clock(); //do time thuc thi chuong trình
             f << num_fields;
             f << endl << "index" << "|";
             for (int i = 0; i < num_fields; i++) {
@@ -497,8 +548,10 @@ void menu(dataRow data, info info)
                     f << data.fields[i] << "|";
             }
             f.close();
-            saveData();
+            tree.saveData();
             cout << "Save successful!" << endl;
+            end = clock();
+            cout << "Time run: " << (float)(end - begin) / CLOCKS_PER_SEC << "s" << endl;
             break;
         }
         case 9:
@@ -516,6 +569,7 @@ int main()
 
     dataRow data;
     info info;
+    AVL_Tree tree;
 
     if (sql == "create table") {
         data.create();
@@ -523,19 +577,20 @@ int main()
         sql = "---------Statements complete---------";
         cout << endl << sql << endl;
 
-        menu(data, info);
+        menu(data, info, tree);
 
     }
 
     // read data from file
     if (sql == "read data") {
         fstream f;
-        f.open("data.txt", ios::in);
+        f.open("sinhvien.txt", ios::in);
         if (!f.is_open())
         {
             cout << "Can't open this file" << endl;
         }
         else {
+            clock_t begin = clock();
             f >> num_fields;
             string temp_index;
             getline(f, temp_index, '|');
@@ -560,11 +615,13 @@ int main()
                     getline(f, info.data.fields[i], '|');
                 }
                 getline(f, info.data.fields[num_fields - 1], '\n');
-                root = insert(root, info);
+                root = tree.insert(root, info);
             }
             cout << "Read data success!" << endl;
-            
-            menu(data, info);
+            clock_t end = clock();
+            cout << "Time run: " << (float)(end - begin) / CLOCKS_PER_SEC << "s" << endl;
+
+            menu(data, info, tree);
         }
 
     }
@@ -574,116 +631,5 @@ int main()
 
     return 0;
 }
-
-
-// Giải thích các cấu trcu1 dữ liệu mảng - binary tree - AVL Tree / Tài
-// Các chức năng
-/*
-Insert, search C , T
-Delete, update, C, T
-save read TB
-*/
-
-
-Node* deleteNode(Node* root, int key)
-{
-
-    if (root == NULL)
-        return root;
-    if (key < root->info.index)
-        root->left = deleteNode(root->left, key);
-    else if (key > root->info.index)
-        root->right = deleteNode(root->right, key);
-    else
-    {
-        // node with only one child or no child
-        if ((root->left == NULL) ||
-            (root->right == NULL))
-        {
-            Node* temp = root->left ?
-                root->left :
-                root->right;
-
-            // No child case
-            if (temp == NULL)
-            {
-                temp = root;
-                root = NULL;
-            }
-            else // One child case
-                *root = *temp; // Copy the contents of
-            free(temp);
-        }
-        else
-        {
-
-            Node* temp = minValueNode(root->right);
-            root->info.index = temp->info.index;
-            root->right = deleteNode(root->right,
-                temp->info.index);
-        }
-    }
-    if (root == NULL)
-        return root;
-
-    // STEP 2: UPDATE HEIGHT OF THE CURRENT NODE
-    root->height = 1 + max(height(root->left),
-        height(root->right));
-
-    // STEP 3: GET THE BALANCE FACTOR OF
-    int balance = getBalance(root);
-    // Left Left Case
-    if (balance > 1 &&
-        getBalance(root->left) >= 0)
-        return rightRotate(root);
-    // Left Right Case
-    if (balance > 1 &&
-        getBalance(root->left) < 0)
-    {
-        root->left = leftRotate(root->left);
-        return rightRotate(root);
-    }
-    // Right Right Case
-    if (balance < -1 &&
-        getBalance(root->right) <= 0)
-        return leftRotate(root);
-    // Right Left Case
-    if (balance < -1 &&
-        getBalance(root->right) > 0)
-    {
-        root->right = rightRotate(root->right);
-        return leftRotate(root);
-    }
-    return root;
-}
-Node* search(Node* node, int key)
-{
-    if (node == NULL)
-    {
-        /* Element is not found */
-        return NULL;
-    }
-    if (key > node->info.index)
-    {
-        /* Search in the right sub tree. */
-        return search(node->right, key);
-    }
-    else if (key < node->info.index)
-    {
-        /* Search in the left sub tree. */
-        return search(node->left, key);
-    }
-    else
-    {
-        /* Element Found */
-        return node;
-    }
-}
-
-
-
-
-
-
 
 

@@ -1,6 +1,0 @@
-2
-index|name|age
-1|voduytao|19
-2|anhtai|19
-3|maianh|19
-4|thanhtrang|19
