@@ -271,7 +271,6 @@ Node* AVL_Tree::minValueNode(Node* node)
 Node* AVL_Tree::deleteNode(Node* root, int key)
 {
 
-    // STEP 1: PERFORM STANDARD BST DELETE
     if (root == NULL)
         return root;
 
@@ -331,11 +330,9 @@ Node* AVL_Tree::deleteNode(Node* root, int key)
     if (root == NULL)
         return root;
 
-    // STEP 2: UPDATE HEIGHT OF THE CURRENT NODE
     root->height = 1 + max(height(root->left),
         height(root->right));
 
-    // STEP 3: GET THE BALANCE FACTOR OF
     // THIS NODE (to check whether this
     // node became unbalanced)
     int balance = getBalance(root);
