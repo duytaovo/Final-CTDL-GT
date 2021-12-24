@@ -11,4 +11,4 @@ vd: 1 tao email address 9
 +update tương tự theo index nhưng khi nhập giá trị sau update không cần nhập index như lúc insert mà nhập từ field[0]
 +3 kiểu duyệt cây , preOrder, inOrder,postOder
 +save data
-+exit
+exit
