@@ -1,12 +1,13 @@
-﻿#include <iostream>
+#include <iostream>
 #include <string>
 #include <cstdlib>
 #include <fstream>
 #include <sstream>
+#include<iomanip>
 
 using namespace std;
 
-int num_fields; 
+int num_fields; // biến toàn cục, số cột của bảng
 
 class dataRow {
 public:
@@ -23,6 +24,7 @@ public:
     }
 };
 
+//Lưu trữ thông tin của toàn table
 struct info {
     int index;
     dataRow data;
@@ -66,6 +68,7 @@ public:
 
 int max(int a, int b);
 void menu(dataRow data, info info);
+void simulation();
 
 int max(int a, int b)
 {
@@ -107,10 +110,8 @@ Node* AVL_Tree::rightRotate(Node* y)
     y->left = T2;
 
     // Update heights
-    y->height = max(height(y->left),
-        height(y->right)) + 1;
-    x->height = max(height(x->left),
-        height(x->right)) + 1;
+    y->height = max(height(y->left), height(y->right)) + 1;
+    x->height = max(height(x->left), height(x->right)) + 1;
 
     // Return new root
     return x;
@@ -129,10 +130,8 @@ Node* AVL_Tree::leftRotate(Node* x)
     x->right = T2;
 
     // Update heights
-    x->height = max(height(x->left),
-        height(x->right)) + 1;
-    y->height = max(height(y->left),
-        height(y->right)) + 1;
+    x->height = max(height(x->left), height(x->right)) + 1;
+    y->height = max(height(y->left), height(y->right)) + 1;
 
     // Return new root
     return y;
@@ -143,7 +142,7 @@ int AVL_Tree::getBalance(Node* N)
 {
     if (N == NULL)
         return 0;
-    return height(N->left) - height(N->right);
+    return height(N->left) - height(N->right); 
 }
 
 // Recursive function to insert a key
@@ -210,9 +209,9 @@ void AVL_Tree::preOrder(Node* node = root)
         cout << "Nothing to display" << endl;
     }
     else if (node != NULL) {
-        cout << node->info.index << "\t\t";
+        cout << left << setw(10) << node->info.index; // << "\t\t";
         for (int i = 0; i < num_fields; i++) {
-            cout << node->info.data.fields[i] << "\t\t";
+            cout << left << setw(20) << node->info.data.fields[i];// << "\t\t";
         }
         cout << "\n";
         preOrder(node->left);
@@ -226,9 +225,9 @@ void AVL_Tree::inOrder(Node* node = root)
     }
     else if (node != NULL) {
         inOrder(node->left);
-        cout << node->info.index << "\t\t";
+        cout << left << setw(10) << node->info.index;// << "\t\t";
         for (int i = 0; i < num_fields; i++) {
-            cout << node->info.data.fields[i] << "\t\t";
+            cout << left << setw(20) << node->info.data.fields[i];// << "\t\t";
         }
         cout << "\n";
         inOrder(node->right);
@@ -242,9 +241,9 @@ void AVL_Tree::postOrder(Node* node = root)
     else if (node != NULL) {
         postOrder(node->left);
         postOrder(node->right);
-        cout << node->info.index << "\t\t";
+        cout << left << setw(10) << node->info.index;// << "\t\t";
         for (int i = 0; i < num_fields; i++) {
-            cout << node->info.data.fields[i] << "\t\t";
+            cout << left << setw(20) << node->info.data.fields[i];// << "\t\t";
         }
         cout << "\n";
     }
@@ -271,6 +270,7 @@ Node* AVL_Tree::minValueNode(Node* node)
 Node* AVL_Tree::deleteNode(Node* root, int key)
 {
 
+    // STEP 1: PERFORM STANDARD BST DELETE
     if (root == NULL)
         return root;
 
@@ -330,9 +330,11 @@ Node* AVL_Tree::deleteNode(Node* root, int key)
     if (root == NULL)
         return root;
 
+    // STEP 2: UPDATE HEIGHT OF THE CURRENT NODE
     root->height = 1 + max(height(root->left),
         height(root->right));
 
+    // STEP 3: GET THE BALANCE FACTOR OF
     // THIS NODE (to check whether this
     // node became unbalanced)
     int balance = getBalance(root);
@@ -398,9 +400,9 @@ void AVL_Tree::searchData(int key)
         cout << "Data is not found" << endl;
     else
     {
-        cout << result->info.index << "\t\t";
+        cout << left << setw(10) << result->info.index;// << "\t\t";
         for (int i = 0; i < num_fields; i++) {
-            cout << result->info.data.fields[i] << "\t\t";
+            cout << left << setw(20) << result->info.data.fields[i];// << "\t\t";
         }
     }
 }
@@ -432,7 +434,7 @@ void AVL_Tree::saveData(Node* node = root)
 
         //viet save vs fstream
         fstream f;
-        f.open("sinhvien.txt", ios::app);
+        f.open("Text.txt", ios::app);
         f << endl << node->info.index << "|";
         for (int i = 0; i < num_fields - 1; i++) {
             f << node->info.data.fields[i] << "|";
@@ -463,7 +465,7 @@ void menu(dataRow data, info info, AVL_Tree tree)
             begin = clock(); //do time thuc thi chuong trình
             root = tree.insert(root, info);
             end = clock();
-            cout << "Time run: " << (float)(end - begin) / CLOCKS_PER_SEC << "s" << endl;
+            cout << "Time run: " << (float)(end - begin) / (CLOCKS_PER_SEC / 1000) << "ms" << endl;
             break;
         case 2:
             cout << "Enter element to delete: ";
@@ -471,57 +473,57 @@ void menu(dataRow data, info info, AVL_Tree tree)
             begin = clock(); //do time thuc thi chuong trình
             root = tree.deleteNode(root, key);
             end = clock();
-            cout << "Time run: " << (float)(end - begin) / CLOCKS_PER_SEC << "s" << endl;
+            cout << "Time run: " << (float)(end - begin) / (CLOCKS_PER_SEC / 1000) << "ms" << endl;
             break;
         case 3:
             begin = clock(); //do time thuc thi chuong trình
             cout << endl;
-            cout << "index" << "\t\t";
+            cout << left << setw(10) << "index";// << "\t\t";
             for (int i = 0; i < num_fields; i++) {
-                cout << data.fields[i] << "\t\t";
+                cout << left << setw(20) << data.fields[i];// << "\t\t";
             }
             cout << endl;
             tree.preOrder(root);
             end = clock();
-            cout << "Time run: " << (float)(end - begin) / CLOCKS_PER_SEC << "s" << endl;
+            cout << "Time run: " << (float)(end - begin) / (CLOCKS_PER_SEC / 1000) << "ms" << endl;
             break;
         case 4:
             begin = clock(); //do time thuc thi chuong trình
             cout << endl;
-            cout << "index" << "\t\t";
+            cout << left << setw(10) << "index";// << "\t\t";
             for (int i = 0; i < num_fields; i++) {
-                cout << data.fields[i] << "\t\t";
+                cout << left << setw(20) << data.fields[i];// << "\t\t";
             }
             cout << endl;
             tree.inOrder(root);
             end = clock();
-            cout << "Time run: " << (float)(end - begin) / CLOCKS_PER_SEC << "s" << endl;
+            cout << "Time run: " << (float)(end - begin) / (CLOCKS_PER_SEC / 1000) << "ms" << endl;
             break;
         case 5:
             begin = clock(); //do time thuc thi chuong trình
             cout << endl;
-            cout << "index" << "\t\t";
+            cout << left << setw(10) << "index";// << "\t\t";
             for (int i = 0; i < num_fields; i++) {
-                cout << data.fields[i] << "\t\t";
+                cout << left << setw(20) << data.fields[i];// << "\t\t";
             }
             cout << endl;
             tree.postOrder(root);
             end = clock();
-            cout << "Time run: " << (float)(end - begin) / CLOCKS_PER_SEC << "s" << endl;
+            cout << "Time run: " << (float)(end - begin) / (CLOCKS_PER_SEC / 1000) << "ms" << endl;
             break;
         case 6:
             cout << "Enter element to search: ";
             cin >> key;
-            cout << "index" << "\t\t";
+            cout << left << setw(10) << "index";// << "\t\t";
             for (int i = 0; i < num_fields; i++) {
-                cout << data.fields[i] << "\t\t";
+                cout << left << setw(20) << data.fields[i];// << "\t\t";
             }
             cout << endl;
             begin = clock(); //do time thuc thi chuong trình
             tree.searchData(key);
             cout << endl;
             end = clock();
-            cout << "Time run: " << (float)(end - begin) / CLOCKS_PER_SEC << "s" << endl;
+            cout << "Time run: " << (float)(end - begin) / (CLOCKS_PER_SEC / 1000) << "ms" << endl;
             break;
         case 7:
             cout << "Enter element to update: ";
@@ -529,12 +531,12 @@ void menu(dataRow data, info info, AVL_Tree tree)
             begin = clock(); //do time thuc thi chuong trình
             tree.updateData(key);
             end = clock();
-            cout << "Time run: " << (float)(end - begin) / CLOCKS_PER_SEC << "s" << endl;
+            cout << "Time run: " << (float)(end - begin) / (CLOCKS_PER_SEC / 1000) << "ms" << endl;
             break;
         case 8:
         {
             fstream f;
-            f.open("sinhvien.txt", ios::out);
+            f.open("Text.txt", ios::out);
             begin = clock(); //do time thuc thi chuong trình
             f << num_fields;
             f << endl << "index" << "|";
@@ -548,7 +550,7 @@ void menu(dataRow data, info info, AVL_Tree tree)
             tree.saveData();
             cout << "Save successful!" << endl;
             end = clock();
-            cout << "Time run: " << (float)(end - begin) / CLOCKS_PER_SEC << "s" << endl;
+            cout << "Time run: " << (float)(end - begin) / (CLOCKS_PER_SEC / 1000) << "ms" << endl;
             break;
         }
         case 9:
@@ -557,9 +559,81 @@ void menu(dataRow data, info info, AVL_Tree tree)
     }
 }
 
+void simulation()
+{
+    AVL_Tree tree;
+    info info;
+
+    for (int solanchay = 1000; solanchay <= 20000; solanchay += 1000) {
+        cout << "\n\n\t\tSO LAN CHAY:" << solanchay;
+
+        float minI = 999, maxI = -1, subMeanI = 0;
+        cout << "\t\t\t=======================================INSERT simulation=========================================\n" << endl;
+        for (int i = 1; i <= solanchay; i++)
+        {
+            info.index = i;
+            clock_t begin = clock();
+            root = tree.insert(root, info);
+            clock_t end = clock();
+            float time = (float)(end - begin) / (CLOCKS_PER_SEC / 1000);
+            subMeanI += time;
+            //cout << time << "ms\t";
+            if (time < minI)
+                minI = time;
+            if (time > maxI)
+                maxI = time;
+            //if (i % 25 == 0)
+                //cout << endl;
+        }
+        cout << "\n\t\t\tMin: " << minI << "ms\t\tMax: " << maxI << "ms\t\tMean: " << subMeanI / solanchay << "ms\n";
+
+
+        float minS = 999, maxS = -1, subMeanS = 0;
+        cout << "\n\n\t\t\t======================================SEARCH simulation=====================================\n" << endl;
+        for (int i = 1; i <= solanchay; i++)
+        {
+            clock_t begin = clock(); //do time thuc thi chuong trình
+            Node* result = tree.search(root, i);
+            //cout << result->info.index << "  ";
+            clock_t end = clock();
+            float time = (float)(end - begin) / (CLOCKS_PER_SEC / 1000);
+            subMeanS += time;
+            //cout << time << "ms\t";
+            if (time < minS)
+                minS = time;
+            if (time > maxS)
+                maxS = time;
+            //if (i % 25 == 0)
+                //cout << endl;
+        }
+        cout << "\n\t\t\tMin: " << minS << "ms\t\tMax: " << maxS << "ms\t\tMean: " << subMeanS / solanchay << "ms\n";
+
+        float minD = 999, maxD = -1, subMeanD = 0;
+        cout << "\n\n\t\t\t====================================================DELETE simulation==================================================\n" << endl;
+        for (int i = 1; i <= solanchay; i++)
+        {
+            clock_t begin = clock(); //do time thuc thi chuong trình
+            root = tree.deleteNode(root, i);
+            clock_t end = clock();
+            float time = (float)(end - begin) / (CLOCKS_PER_SEC / 1000);
+            subMeanD += time;
+            //cout << time << "ms\t";
+            if (time < minD)
+                minD = time;
+            if (time > maxD)
+                maxD = time;
+            //if (i % 25 == 0)
+                //cout << endl;
+        }
+        cout << "\n\t\t\tMin: " << minD << "ms\t\tMax: " << maxD << "ms\t\tMean: " << subMeanD / solanchay << "ms\n";
+    }
+
+    
+}
+
+
 int main()
 {
-
     cout << "Enter SQL statement: ";
     string sql;
     getline(cin, sql);
@@ -581,7 +655,7 @@ int main()
     // read data from file
     if (sql == "read data") {
         fstream f;
-        f.open("sinhvien.txt", ios::in);
+        f.open("Text.txt", ios::in);
         if (!f.is_open())
         {
             cout << "Can't open this file" << endl;
@@ -589,6 +663,7 @@ int main()
         else {
             clock_t begin = clock();
             f >> num_fields;
+
             string temp_index;
             getline(f, temp_index, '|');
 
@@ -616,7 +691,7 @@ int main()
             }
             cout << "Read data success!" << endl;
             clock_t end = clock();
-            cout << "Time run: " << (float)(end - begin) / CLOCKS_PER_SEC << "s" << endl;
+            cout << "Time run: " << (float)(end - begin) / (CLOCKS_PER_SEC / 1000) << "ms" << endl;
 
             menu(data, info, tree);
         }
@@ -626,6 +701,7 @@ int main()
     if (sql != "create table" || sql != "read data")
         cout << "\n----------Statement error!. Please restart program!----------\n";
 
+    // simulation();
     return 0;
 }
 
